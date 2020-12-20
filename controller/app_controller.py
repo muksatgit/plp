@@ -11,6 +11,8 @@ class AppController(object):
     def __init__(self):
         self.f_connector = FTPConnector()
         self.util = Utils()
+        self.records = None
+        self.count = 0
 
     def load_gft_data_from_ftp(self) -> None:
 
@@ -31,8 +33,16 @@ class AppController(object):
             my_query = 'SELECT * FROM sf_import'
             my_cursor.execute(my_query)
             records = my_cursor.fetchall()
-            for record in records:
-                print(record)
+            self.records = records
+            #for record in records:
+             #   print(record)
+
+
+    def read_next_line(self):
+        if self.count < len(self.records):
+            self.count = self.count + 1
+            return self.records[self.count]
+
 
     def read_gft_csv_inset_to_db(self) -> None:
         _file_name = self.util.prop.get_prop(AppConst.SF_GFT_DATA_LOCAL_FILE)
